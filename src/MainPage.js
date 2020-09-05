@@ -1,20 +1,26 @@
-import React from 'react';
-import dummyStore from './DummyStore.js';
+import React, { useContext } from 'react';
 import Note from './Note.js';
+import NotefulContext from './NotefulContext.js';
 
 export default function MainPage(props) {
+    let {notes} = useContext(NotefulContext);
+    if (props.selected) {
+        notes = notes.filter(note => note.folderId === props.selected)
+    }
+            
+    notes = notes.map((note, index) =>
+        <li key={index}>
+            <Note
+                {...note}
+            />
+        </li>)
+
     return(
         <div className='main-page'>
-        <ul>{dummyStore.notes
-        .filter(note => note.folderId === props.selected)
-        .map(note =>
-            <li>
-                <Note
-                    {...note}
-                />
-            </li>)}
-        </ul>
-        <button type='submit'>Add Note</button>
+            <ul>
+                {notes}
+            </ul>
+            <button type='submit'>Add Note</button>
         </div>
-    )
+    )  
 }

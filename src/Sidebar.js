@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import dummyStore from './DummyStore.js';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import NotefulContext from './NotefulContext';
 
-export default class Sidebar extends Component {
-    render() {
-        return(
-            <div className='sidebar'>
-            <ul>{dummyStore.folders.map(folder =>
-                <li className={folder.id === this.props.selected ?"folder selected" :"folder"}>
+export default function Sidebar(props) {
+    const {folders} = useContext(NotefulContext)
+    return(
+        <div className='sidebar'>
+            <ul>{folders.map(folder =>
+                <li key={folder.id} className={folder.id === props.selected ?"folder selected" :"folder"}>
                     <Link to={`/folder/${folder.id}`}>{folder.name}</Link>
-                </li>)}</ul>
+                </li>)}
+            </ul>
             <button type='submit'>Add Folder</button>
-            </div>
-        )
-    }
+        </div>
+    )
 }

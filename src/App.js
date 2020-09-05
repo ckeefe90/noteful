@@ -1,56 +1,110 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
 import Header from './Header.js';
-import Sidebar from './Sidebar.js';
-import MainPage from './MainPage.js';
-import dummyStore from './DummyStore.js';
-import NoteSidebar from './NoteSidebar.js';
-import Note from './Note.js';
+import NotefulContext from './NotefulContext.js'
+import AppSwitch from './AppSwitch.js';
+import config from './config.js';
+import { withRouter } from 'react-router-dom';
 
-export default class App extends Component {
+class App extends Component {
   state = {
     notes: [],
-    folders: []
+    folders: [],
   };
+
+  loadNotes() {
+    fetch(`${config.API_ENDPOINT}/notes`, {
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    .then(response => {
+      if(response.ok) {
+        return response.json()
+      }
+    throw Error('Unable to load notes.')
+    })
+    .then(notes => {
+      this.setState({notes})
+    })
+    .catch(error => {
+      console.error(error)
+    })
+  }
+
+  loadFolders() {
+    fetch(`${config.API_ENDPOINT}/folders`, {
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    .then(response => {
+      if(response.ok) {
+        return response.json()
+      }
+    throw Error('Unable to load folders.')
+    })
+    .then(folders => {
+      this.setState({folders})
+    })
+    .catch(error => {
+      console.error(error)
+    })
+  }
+
+  componentDidMount() {
+    this.loadNotes()
+    this.loadFolders()
+  }
+
+  addFolder() {
+
+  }
+
+  addNote() {
+
+  }
+
+  deleteNote = (noteId) => {
+    fetch(`${config.API_ENDPOINT}/notes/${noteId}`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    .then(response => {
+      if(response.ok) {
+        if(this.props.location.pathname.includes('note')) {
+          console.log('test')
+          this.props.history.push('/')
+        }
+        this.setState({notes: this.state.notes.filter(note => note.id !== noteId)})
+      } else {
+        throw Error('Unable to delete note.')
+      }
+    })
+    .catch(error => {
+      console.error(error)
+    })
+  }
+
   render() {
+    const contextValue = {
+      ...this.state, 
+      addFolder: this.addFolder, 
+      addNote: this.addNote, 
+      deleteNote: this.deleteNote
+    }
     return(
       <div className="App">
         <header><Header/></header>
         <main>
-          <Switch>
-            <Route exact path='/' render={props => <>
-              <Sidebar/>
-              <MainPage/>
-            </> }
-            />
-            <Route path="/folder/:folderId"
-              render={props => {
-                const {folderId} = props.match.params;
-                return <>
-                  <Sidebar selected={folderId}/>
-                  <MainPage selected={folderId}/>
-                </>
-              }} />
-              <Route path="/note/:noteId"
-                render={props => {
-                  const {noteId} = props.match.params;
-                  const note = dummyStore.notes.find(n => n.id === noteId)
-                  const folder = dummyStore.folders.find(f => f.id === note.folderId)
-                  return <> 
-                    <NoteSidebar 
-                      folderName={folder.name}
-                      folderId={folder.id}
-                    />
-                    <div class='main-page'>
-                      <Note {...note} />
-                      <div>{note.content}</div>
-                      </div>
-                  </>
-                }} />
-          </Switch>
+          <NotefulContext.Provider value={contextValue}>
+          <AppSwitch/>
+          </NotefulContext.Provider>
         </main>
       </div>
     )
   }
 }
 
+export default withRouter(App)
