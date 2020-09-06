@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import NotefulContext from './NotefulContext';
+import BackButton from './BackButton';
 
 export default class AddNote extends Component {
     static contextType = NotefulContext;
@@ -15,27 +16,34 @@ export default class AddNote extends Component {
     }
 
     render() {
-        return (
-            <form
-                className='AddNote__form'
-                onSubmit={this.handleSubmit}
-            >
-                <div>
-                    <label htmlFor='noteName'>Note Name</label>
-                    <input name='noteName' id='noteName' required />
-                </div>
-                <div>
-                    <label htmlFor='noteName'>Note Content</label>
-                    <input name='noteContent' id='noteContent' />
-                </div>
-                <div>
-                    <select name='folderId' id='folderId'>
-                        {this.context.folders.map(folder =>
-                            <option key={folder.id} value={folder.id}>{folder.name}</option>)}
-                    </select>
-                </div>
-                <button type='submit'>Add Note</button>
-            </form>
-        )
+        return (<>
+            <BackButton />
+            <div className='AddNote__form'>
+                <form
+
+                    onSubmit={this.handleSubmit}
+                >
+                    <div>
+                        <label htmlFor='noteName'>Note Name</label>
+                        <br />
+                        <input name='noteName' id='noteName' required />
+                    </div>
+                    <div>
+                        <label htmlFor='noteName'>Note Content</label>
+                        <br />
+                        <input name='noteContent' id='noteContent' />
+                    </div>
+                    <div>
+                        <label htmlFor='folderId'>Folder</label>
+                        <br />
+                        <select name='folderId' id='folderId'>
+                            {this.context.folders.map(folder =>
+                                <option key={folder.id} value={folder.id}>{folder.name}</option>)}
+                        </select>
+                    </div>
+                    <button type='submit'>Add Note</button>
+                </form>
+            </div>
+        </>)
     }
 }

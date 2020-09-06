@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from 'prop-types';
 
 export default class NotefulError extends Component {
     constructor(props) {
@@ -16,4 +17,8 @@ export default class NotefulError extends Component {
         }
         return this.props.children;
     }
+}
+
+NotefulError.propTypes = {
+    children: PropTypes.node.isRequired
 }

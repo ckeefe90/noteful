@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import NotefulContext from './NotefulContext';
+import BackButton from './BackButton';
 
 export default class AddFolder extends Component {
     static contextType = NotefulContext;
@@ -14,15 +15,19 @@ export default class AddFolder extends Component {
     }
 
     render() {
-        return (
-            <form
-                className='AddFolder__form'
-                onSubmit={this.handleSubmit}
-            >
-                <label htmlFor='folderName'>Folder Name</label>
-                <input name='folderName' id='folderName' />
-                <button type='submit'>Add Folder</button>
-            </form>
-        )
+        return (<>
+            <BackButton />
+            <div className='AddFolder__form'>
+                <form
+                    onSubmit={this.handleSubmit}
+                >
+                    <label htmlFor='folderName'>Folder Name</label>
+                    <br />
+                    <input name='folderName' id='folderName' />
+                    <br />
+                    <button type='submit'>Add Folder</button>
+                </form>
+            </div>
+        </>)
     }
 }

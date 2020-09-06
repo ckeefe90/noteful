@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import Note from './Note.js';
 import NotefulContext from './NotefulContext.js';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 export default function MainPage(props) {
     let { notes } = useContext(NotefulContext);
@@ -21,7 +22,11 @@ export default function MainPage(props) {
             <ul>
                 {notes}
             </ul>
-            <Link to='/add-note'>Add Note</Link>
+            <Link to='/add-note' id='add-note'>Add Note</Link>
         </div>
     )
+}
+
+MainPage.propTypes = {
+    selected: PropTypes.string
 }
