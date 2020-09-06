@@ -4,6 +4,7 @@ import NotefulContext from './NotefulContext.js'
 import AppSwitch from './AppSwitch.js';
 import config from './config.js';
 import { withRouter } from 'react-router-dom';
+import NotefulError from './NotefulError.js';
 
 class App extends Component {
   state = {
@@ -17,18 +18,18 @@ class App extends Component {
         'content-type': 'application/json'
       }
     })
-    .then(response => {
-      if(response.ok) {
-        return response.json()
-      }
-    throw Error('Unable to load notes.')
-    })
-    .then(notes => {
-      this.setState({notes})
-    })
-    .catch(error => {
-      console.error(error)
-    })
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        }
+        throw Error('Unable to load notes.')
+      })
+      .then(notes => {
+        this.setState({ notes })
+      })
+      .catch(error => {
+        console.error(error)
+      })
   }
 
   loadFolders() {
@@ -37,18 +38,18 @@ class App extends Component {
         'content-type': 'application/json'
       }
     })
-    .then(response => {
-      if(response.ok) {
-        return response.json()
-      }
-    throw Error('Unable to load folders.')
-    })
-    .then(folders => {
-      this.setState({folders})
-    })
-    .catch(error => {
-      console.error(error)
-    })
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        }
+        throw Error('Unable to load folders.')
+      })
+      .then(folders => {
+        this.setState({ folders })
+      })
+      .catch(error => {
+        console.error(error)
+      })
   }
 
   componentDidMount() {
@@ -56,12 +57,56 @@ class App extends Component {
     this.loadFolders()
   }
 
-  addFolder() {
-
+  addFolder = (folderName) => {
+    console.log('adding folder', folderName)
+    fetch(`${config.API_ENDPOINT}/folders`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({ name: folderName })
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          throw Error('Unable to add folder.')
+        }
+      })
+      .then(folder => {
+        const folders = this.state.folders.concat([folder])
+        this.setState({ folders })
+        this.props.history.push('/')
+      })
+      .catch(error => {
+        console.error(error)
+      })
   }
 
-  addNote() {
-
+  addNote = (note) => {
+    console.log('adding note', note)
+    fetch(`${config.API_ENDPOINT}/notes`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(note)
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          throw Error('Unable to add note.')
+        }
+      })
+      .then(note => {
+        const notes = this.state.notes.concat([note])
+        this.setState({ notes })
+        this.props.history.push('/')
+      })
+      .catch(error => {
+        console.error(error)
+      })
   }
 
   deleteNote = (noteId) => {
@@ -71,36 +116,38 @@ class App extends Component {
         'content-type': 'application/json'
       }
     })
-    .then(response => {
-      if(response.ok) {
-        if(this.props.location.pathname.includes('note')) {
-          console.log('test')
-          this.props.history.push('/')
+      .then(response => {
+        if (response.ok) {
+          if (this.props.location.pathname.includes('note')) {
+            console.log('test')
+            this.props.history.push('/')
+          }
+          this.setState({ notes: this.state.notes.filter(note => note.id !== noteId) })
+        } else {
+          throw Error('Unable to delete note.')
         }
-        this.setState({notes: this.state.notes.filter(note => note.id !== noteId)})
-      } else {
-        throw Error('Unable to delete note.')
-      }
-    })
-    .catch(error => {
-      console.error(error)
-    })
+      })
+      .catch(error => {
+        console.error(error)
+      })
   }
 
   render() {
     const contextValue = {
-      ...this.state, 
-      addFolder: this.addFolder, 
-      addNote: this.addNote, 
+      ...this.state,
+      addFolder: this.addFolder,
+      addNote: this.addNote,
       deleteNote: this.deleteNote
     }
-    return(
+    return (
       <div className="App">
-        <header><Header/></header>
+        <header><Header /></header>
         <main>
-          <NotefulContext.Provider value={contextValue}>
-          <AppSwitch/>
-          </NotefulContext.Provider>
+          <NotefulError>
+            <NotefulContext.Provider value={contextValue}>
+              <AppSwitch />
+            </NotefulContext.Provider>
+          </NotefulError>
         </main>
       </div>
     )
