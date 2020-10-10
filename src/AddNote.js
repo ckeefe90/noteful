@@ -10,8 +10,8 @@ export default class AddNote extends Component {
 
     handleSubmit = e => {
         e.preventDefault()
-        const { noteName, noteContent, folderId } = e.target
-        const note = { name: noteName.value, folderId: folderId.value, content: noteContent.value }
+        const { noteName, noteContent, folder_id } = e.target
+        const note = { name: noteName.value, folder_id: folder_id.value, content: noteContent.value }
         this.context.addNote(note)
     }
 
@@ -34,9 +34,9 @@ export default class AddNote extends Component {
                         <input name='noteContent' id='noteContent' />
                     </div>
                     <div>
-                        <label htmlFor='folderId'>Folder</label>
+                        <label htmlFor='folder_id'>Folder</label>
                         <br />
-                        <select name='folderId' id='folderId'>
+                        <select name='folder_id' id='folder_id'>
                             {this.context.folders.map(folder =>
                                 <option key={folder.id} value={folder.id}>{folder.name}</option>)}
                         </select>

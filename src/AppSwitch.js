@@ -18,23 +18,23 @@ export default function AppSwitch() {
                     <MainPage />
                 </>}
             />
-            <Route path="/folder/:folderId"
+            <Route path="/folder/:folder_id"
                 render={props => {
-                    const { folderId } = props.match.params;
+                    const { folder_id } = props.match.params;
                     return <>
-                        <Sidebar selected={folderId} />
-                        <MainPage selected={folderId} />
+                        <Sidebar selected={folder_id} />
+                        <MainPage selected={folder_id} />
                     </>
                 }} />
             <Route path="/note/:noteId"
                 render={props => {
                     const { noteId } = props.match.params;
                     const note = notes.find(n => n.id === noteId)
-                    const folder = folders.find(f => f.id === note.folderId)
+                    const folder = folders.find(f => f.id === note.folder_id)
                     return <>
                         <NoteSidebar
                             folderName={folder.name}
-                            folderId={folder.id}
+                            folder_id={folder.id}
                         />
                         <div className='main-page'>
                             <Note {...note} />

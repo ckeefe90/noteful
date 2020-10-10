@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 export default function NoteSidebar(props) {
     return (
         <div className='sidebar'>
-            <Link to={`/folder/${props.folderId}`}>Go Back</Link>
+            <Link to={`/folder/${props.folder_id}`}>Go Back</Link>
             <h2 className='folder-name'>{props.folderName}</h2>
         </div>
     )
 }
 
 NoteSidebar.propTypes = {
-    folderId: PropTypes.string.isRequired,
+    folder_id: PropTypes.string.isRequired,
     folderName: PropTypes.string.isRequired,
 }
