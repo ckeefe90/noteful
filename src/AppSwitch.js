@@ -29,7 +29,7 @@ export default function AppSwitch() {
             <Route path="/note/:noteId"
                 render={props => {
                     const { noteId } = props.match.params;
-                    const note = notes.find(n => n.id === noteId)
+                    const note = notes.find(n => n.id === Number(noteId))
                     const folder = folders.find(f => f.id === note.folder_id)
                     return <>
                         <NoteSidebar
