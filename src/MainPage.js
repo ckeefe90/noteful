@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 export default function MainPage(props) {
     let { notes } = useContext(NotefulContext);
     if (props.selected) {
-        notes = notes.filter(note => note.folder_id === props.selected)
+        notes = notes.filter(note => note.folder_id === Number(props.selected))
     }
 
     notes = notes.map((note, index) =>
